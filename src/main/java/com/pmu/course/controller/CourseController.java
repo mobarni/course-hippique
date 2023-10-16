@@ -13,8 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Controller
 @RequestMapping("/course")
@@ -27,7 +26,7 @@ public class CourseController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("server",courseService.create(course)))
+                        .data(Map.of("course",courseService.create(course)))
                         .message("course créée")
                         .status(CREATED)
                         .statusCode(CREATED.value())
@@ -53,7 +52,7 @@ public class CourseController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("server",courseService.get(id)))
+                        .data(Map.of("course",courseService.get(id)))
                         .message("Course trouvé")
                         .status(OK)
                         .statusCode(OK.value())
@@ -66,10 +65,10 @@ public class CourseController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("server",courseService.update(course)))
+                        .data(Map.of("course",courseService.update(course)))
                         .message("Course créée")
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
+                        .status(ACCEPTED)
+                        .statusCode(ACCEPTED.value())
                         .build()
         );
     }
@@ -79,8 +78,8 @@ public class CourseController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("server", courseService.delete(id)))
-                        .message("Suppresion effectué")
+                        .data(Map.of("course", courseService.delete(id)))
+                        .message("Suppresion course effectuée")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()

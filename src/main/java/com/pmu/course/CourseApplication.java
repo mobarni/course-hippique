@@ -1,5 +1,7 @@
 package com.pmu.course;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pmu.course.model.Course;
 import com.pmu.course.model.Partant;
 import com.pmu.course.repository.CourseRepository;
@@ -14,6 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @SpringBootApplication
@@ -54,6 +57,7 @@ public class CourseApplication {
 		log.info(partants1.toString());
 		return  args -> {
 			Course course1 = new Course(UUID.randomUUID(),1001,"CourseDeVincenne", LocalDate.now(), partants1);
+
 			Course course2 = new Course(UUID.randomUUID(),1002,"CourseDeLongchamp",LocalDate.now().minusDays(1L), partants2);
 			Course course3 = new Course(UUID.randomUUID(),1003,"CourseDAuteuil",LocalDate.now().minusDays(2L), partants3);
 			log.info(course1.toString());
@@ -74,7 +78,7 @@ public class CourseApplication {
 				"Access-Control-Request-Method", "Access-Control-Request-Headers"));
 		corsConfiguration.setExposedHeaders(Arrays.asList("Origin","Content-Type","Accept","Jwt-Token","Authorization",
 				"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials","Filename"));
-		corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","UPDATE","DELETE","OPTIONS"));
+		corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","PATCH","DELETE","OPTIONS"));
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}

@@ -38,7 +38,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean delete(UUID id) {
-        log.info("suppression de la: {}",id);
+        log.info("suppression de la course: {}",id);
         courseRepository.deleteById(id);
         return true;
     }
