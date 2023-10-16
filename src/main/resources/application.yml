@@ -19,3 +19,7 @@ spring:
     logging:
         level:
             root: TRACE
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            group-id: myGroup

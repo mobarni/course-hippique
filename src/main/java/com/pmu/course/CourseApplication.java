@@ -1,7 +1,5 @@
 package com.pmu.course;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pmu.course.model.Course;
 import com.pmu.course.model.Partant;
 import com.pmu.course.repository.CourseRepository;
@@ -11,13 +9,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @SpringBootApplication
 @Slf4j
@@ -28,7 +29,7 @@ public class CourseApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(CourseRepository courseRepo, PartantRepository partantRepository){
+	CommandLineRunner run(CourseRepository courseRepo, PartantRepository partantRepository, KafkaTemplate<String, String> kafkaTemplate){
 
 		Partant partant1 = new Partant(UUID.randomUUID(),1,"Flash");
 		Partant partant2 = new Partant(UUID.randomUUID(),2,"Tornade");
@@ -57,13 +58,16 @@ public class CourseApplication {
 		log.info(partants1.toString());
 		return  args -> {
 			Course course1 = new Course(UUID.randomUUID(),1001,"CourseDeVincenne", LocalDate.now(), partants1);
-
 			Course course2 = new Course(UUID.randomUUID(),1002,"CourseDeLongchamp",LocalDate.now().minusDays(1L), partants2);
 			Course course3 = new Course(UUID.randomUUID(),1003,"CourseDAuteuil",LocalDate.now().minusDays(2L), partants3);
-			log.info(course1.toString());
+
 			courseRepo.save(course1);
 			courseRepo.save(course2);
 			courseRepo.save(course3);
+
+			kafkaTemplate.send("course-topic", course1.toString());
+			kafkaTemplate.send("course-topic", course2.toString());
+			kafkaTemplate.send("course-topic", course3.toString());
 		};
 	}
 
