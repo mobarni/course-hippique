@@ -3,6 +3,12 @@ package com.pmu.course.controller;
 import com.pmu.course.model.Course;
 import com.pmu.course.model.Response;
 import com.pmu.course.service.impl.CourseServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,10 +24,11 @@ import static org.springframework.http.HttpStatus.*;
 @Controller
 @RequestMapping("/course")
 @RequiredArgsConstructor
+@Tag(name = "Course Hippique", description = "Course management APIs")
 public class CourseController {
     private final CourseServiceImpl courseService;
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", produces = "application/json")
     public ResponseEntity<Response> saveCourse(@RequestBody @Valid Course course){
         return ResponseEntity.ok(
                 Response.builder()
@@ -34,7 +41,13 @@ public class CourseController {
         );
     }
 
-    @GetMapping("/list")
+    @Operation(
+            summary = "List some courses",
+            description = "list some courses entities and their data from data source")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation")
+    })
+    @GetMapping(value = "/list", produces = "application/json")
     public ResponseEntity<Response> getCourses(){
         return ResponseEntity.ok(
                 Response.builder()
